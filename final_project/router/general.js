@@ -20,19 +20,60 @@ public_users.post("/register", (req,res) => {
   //return res.status(300).json({message: "Yet to be implemented"});
 });
 // Get the book list available in the shop
+/*
 public_users.get('/',function (req, res) {
   //Write your code here
   return res.send(JSON.stringify(books,null,4));
   //return res.status(300).json({message: "Yet to be implemented"});
 });
+*/
+// Get the book list available in the shop
+public_users.get('/',function (req, res) {
+    //Creating a promise method. The promise will get resolved when timer times out after 6 seconds.
+    let myPromise = new Promise((resolve,reject) => {
+        let filtered_books =[];
+        for (let isbn in books) {
+            let book = books[isbn];
+            filtered_books.push(book.title);
+            resolve(filtered_books);
+        }
+    })
+    //Console log before calling the promise
+    console.log("Before calling promise");
+    //Call the promise and wait for it to be resolved and then print a message.
+    myPromise.then((successMessage) => {
+        //console.log("From Callback " + successMessage);
+        return res.send(JSON.stringify(successMessage,null,4));
+    }) 
+});
+
+
 // Get book details based on ISBN
+/*
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
   const isbn = req.params.isbn;
   return res.send(books[isbn]);
   //return res.status(300).json({message: "Yet to be implemented"});
  });
-  
+*/
+// Get book details based on ISBN
+public_users.get('/isbn/:isbn',function (req, res) {
+    //Creating a promise method. The promise will get resolved when timer times out after 6 seconds.
+    let myPromise = new Promise((resolve,reject) => {
+        setTimeout(() => {
+        resolve("Promise resolved")
+        },6000)})
+    //Console log before calling the promise
+    console.log("Before calling promise");
+    //Call the promise and wait for it to be resolved and then print a message.
+    myPromise.then((successMessage) => {
+        console.log("From Callback " + successMessage);
+        const isbn = req.params.isbn;
+        return res.send(books[isbn]);
+    }) 
+});
+
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
