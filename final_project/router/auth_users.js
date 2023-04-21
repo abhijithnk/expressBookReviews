@@ -52,16 +52,10 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   let review_author = req.session.authorization["username"];
   console.log("review author is: " +review_author);
   if (book) { //Check is book exists
-    let review = req.body;
+    let review = req.body.review;
     if(review) {
         book["reviews"][review_author] = review;
-        /*
-        if (book["reviews"][review_author]) {
-            book["reviews"][review_author] = review;
-        } else {
-            book["reviews"].push({review_author: review});
-        }
-        */
+
     }
     res.send(`Book with the isbn ${isbn} updated with review ${review}. Now books looks like this ` + JSON.stringify(books,null,4));
   }
@@ -70,6 +64,24 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   }
   //return res.status(300).json({message: "Yet to be implemented"});
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    let book = books[isbn];
+    let review_author = req.session.authorization["username"];
+    console.log("deleting review author is: " +review_author);
+    if (book) { //Check is book exists
+      if(book["reviews"][review_author]) {
+          delete book["reviews"][review_author];
+      }
+      res.send(`Book with the isbn ${isbn} updated with deleted review of ${review_author}. Now books looks like this ` + JSON.stringify(books,null,4));
+    }
+    else{
+      res.send("Unable to find book!");
+    }
+    //return res.status(300).json({message: "Yet to be implemented"});
+});
+
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
